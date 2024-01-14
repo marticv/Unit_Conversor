@@ -21,23 +21,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun ItemValueAndUnit() {
+fun ItemValueAndUnit(options: List<String>, value:String, onValueChange:(String)->Unit, expanded:Boolean, onExpandedChanged:()->Unit, onSpinnerClose:()->Unit, readOnly: Boolean =false) {
 
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-
-    var value by remember {
-        mutableStateOf("")
-    }
-
-    val options = listOf("Km", "cm", "dm")
 
     var selectedOptionText by remember {
         mutableStateOf(options[0])
@@ -51,18 +40,20 @@ fun ItemValueAndUnit() {
         ) {
             OutlinedTextField(
                 value = value,
-                onValueChange = { value = it },
+                onValueChange = { onValueChange(it) },
                 label = { Text("Introduce valor") },
                 singleLine = true,
                 maxLines  = 1,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.weight(3f)
+                modifier = Modifier.weight(3f),
+                enabled = readOnly
+
             )
             Spacer(modifier = Modifier.size(8.dp))
             ExposedDropdownMenuBox(
                 expanded = expanded,
                 onExpandedChange = {
-                    expanded = !expanded
+                    onExpandedChanged()
                 },
                 modifier = Modifier.weight(1f)
             ) {
@@ -75,13 +66,13 @@ fun ItemValueAndUnit() {
                 )
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }) {
+                    onDismissRequest = { onSpinnerClose}) {
                     options.forEach { item ->
                         DropdownMenuItem(
                             text = { Text(text = item) },
                             onClick = {
                                 selectedOptionText = item
-                                expanded = false
+                                onSpinnerClose
                             }
                         )
                     }
