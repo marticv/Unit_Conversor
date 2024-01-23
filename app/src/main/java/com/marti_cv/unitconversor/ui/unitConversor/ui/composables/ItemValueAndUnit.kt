@@ -14,10 +14,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -25,12 +21,18 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemValueAndUnit(options: List<String>, value:String, onValueChange:(String)->Unit, expanded:Boolean, onExpandedChanged:()->Unit, onSpinnerClose:()->Unit, readOnly: Boolean =false) {
+fun ItemValueAndUnit(
+    options: List<String>,
+    selectedOptionText: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    expanded: Boolean,
+    onExpandedChanged: () -> Unit,
+    onSpinnerClose: () -> Unit,
+    readOnly: Boolean = false,
+    onItemChanged:(String)->Unit
+) {
 
-
-    var selectedOptionText by remember {
-        mutableStateOf(options[0])
-    }
 
     Column {
         Text(text = "Convertir")
@@ -43,7 +45,7 @@ fun ItemValueAndUnit(options: List<String>, value:String, onValueChange:(String)
                 onValueChange = { onValueChange(it) },
                 label = { Text("Introduce valor") },
                 singleLine = true,
-                maxLines  = 1,
+                maxLines = 1,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.weight(3f),
                 enabled = readOnly
@@ -66,13 +68,15 @@ fun ItemValueAndUnit(options: List<String>, value:String, onValueChange:(String)
                 )
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { onSpinnerClose}) {
+                    onDismissRequest = { onSpinnerClose }) {
                     options.forEach { item ->
                         DropdownMenuItem(
                             text = { Text(text = item) },
                             onClick = {
-                                selectedOptionText = item
-                                onSpinnerClose
+                                //selectedOptionText = item
+                                onItemChanged(item)
+                                onSpinnerClose()
+
                             }
                         )
                     }
