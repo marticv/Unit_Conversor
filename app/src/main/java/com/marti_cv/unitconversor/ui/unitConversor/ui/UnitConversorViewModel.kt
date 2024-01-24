@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.math.BigDecimal
+import java.math.RoundingMode
 import javax.inject.Inject
 
 @HiltViewModel
@@ -198,9 +200,15 @@ class UnitConversorViewModel @Inject constructor() : ViewModel() {
                     (systemConversions[_selectedOptionsIndex.value!!] / systemConversions[_selectedOptionsIndex2.value!!])
                 val userValue: Int = _valueFirstText.value!!.toInt()
                 finalValue *= userValue
-                _valueSecondText.value = finalValue.toString()
+                changeResultTo2Decimals(finalValue)
             }
         }
     }
+
+     private fun changeResultTo2Decimals(value:Double){
+        val decimal: BigDecimal = BigDecimal(value).setScale(5, RoundingMode.HALF_EVEN)
+        _valueSecondText.value =decimal.toString()
+    }
+
 
 }
