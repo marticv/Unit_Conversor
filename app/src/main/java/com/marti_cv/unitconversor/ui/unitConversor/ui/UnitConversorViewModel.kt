@@ -147,8 +147,10 @@ class UnitConversorViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onValueChange(value: String) {
-        _valueFirstText.value = value
-        changeValue()
+        if(checkValueIsDouble(value)){
+            _valueFirstText.value = value
+            changeValue()
+        }
     }
 
     fun onValueChange2(value: String) {
@@ -208,6 +210,16 @@ class UnitConversorViewModel @Inject constructor() : ViewModel() {
      private fun changeResultTo2Decimals(value:Double){
         val decimal: BigDecimal = BigDecimal(value).setScale(5, RoundingMode.HALF_EVEN)
         _valueSecondText.value =decimal.toString()
+    }
+
+
+    private fun checkValueIsDouble(value: String): Boolean {
+        return try {
+            value.toDouble()
+            true
+        } catch (e: NumberFormatException) {
+            false
+        }
     }
 
 
