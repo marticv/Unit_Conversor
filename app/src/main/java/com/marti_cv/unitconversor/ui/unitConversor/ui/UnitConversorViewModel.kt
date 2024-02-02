@@ -186,8 +186,8 @@ class UnitConversorViewModel @Inject constructor() : ViewModel() {
             val firstValue = _valueFirstText.value
             val secondValue = _valueSecondText.value
 
-            _valueFirstText.value = secondValue
-            _valueSecondText.value = firstValue
+            _valueFirstText.value = secondValue!!
+            _valueSecondText.value = firstValue!!
         }
     }
 
